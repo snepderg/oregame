@@ -2,8 +2,6 @@
 
 io.stdout:setvbuf( "no" )
 
-local lldebugger
-
 if arg[2] == "debug" then
     require( "lldebugger" ).start()
 end
