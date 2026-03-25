@@ -10,7 +10,7 @@ function Building:new( pos, size, image )
 end
 
 function Building:draw()
-    love.graphics.draw( self.image, self.pos.x, self.pos.y, nil, self.size, self.size )
+    love.graphics.draw( self.image, self.pos.x, self.pos.y, nil, self.size.x / self.image:getWidth(), self.size.y / self.image:getHeight() )
 end
 
 return Building
