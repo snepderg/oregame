@@ -1,6 +1,6 @@
 --! file: main.lua
 
-local lldebugger = require( "lib.debug" )
+local _ = require( "units.debug" )
 
 local UPGRADER_PIXEL_OFFSET = 2 -- The texture is offset by 2 pixels.
 
@@ -17,7 +17,7 @@ function love.load()
     upgrader.x = 200
     upgrader.y = 200
     upgrader.size = 4
-    upgrader.image = love.graphics.newImage( "img/upgrader.png" )
+    upgrader.image = love.graphics.newImage( "res/upgrader.png" )
     upgrader.width = upgrader.image:getWidth() * upgrader.size
     upgrader.height = upgrader.image:getHeight() * upgrader.size
     upgrader.beam = beam
