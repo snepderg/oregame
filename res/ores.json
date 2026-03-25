@@ -1,10 +1,10 @@
 [
     {
-        "Name": "Iron",
-        "Value": 5
+        "name": "Iron",
+        "value": 5
     },
     {
-        "Name": "Coal",
-        "Value": 0
+        "name": "Coal",
+        "value": 0
     }
 ]
