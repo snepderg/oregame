@@ -2,17 +2,17 @@ local Object = require( "external.classic" )
 
 local Vector2 = Object:extend(  )
 
-function Vector2:__index( key ) 
+function Vector2:__index( key )
     if key == "x" then
         return rawget( self, 1 )
     elseif key == "y" then
         return rawget( self, 2 )
-    else 
+    else
         return getmetatable( self )[key]
     end
 end
 
-function Vector2:__newindex( key, value ) 
+function Vector2:__newindex( key, value )
     if key == "x" then
         rawset( self, 1, value )
     elseif key == "y" then
@@ -53,7 +53,7 @@ end
 
 function Vector2:IsNearlyEqual( other, epsilon )
     if epsilon == nil then epsilon = 0.001 end
-    
+
     return not ( ( self.x > other.x + epsilon ) or ( self.x < other.x - epsilon ) or ( self.y > other.y + epsilon ) or ( self.y < other.y - epsilon ) )
 end
 
