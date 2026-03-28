@@ -1,6 +1,6 @@
 local Object = require( "external.classic" )
 
-local Vector2 = Object:extend(  )
+local Vector2 = Object:extend()
 
 function Vector2:__index( key )
     if key == "x" then
