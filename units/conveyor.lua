@@ -18,4 +18,4 @@ function Conveyor:onDestroyed()
 end
 
 
-return Building
+return Conveyor
