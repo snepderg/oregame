@@ -1,6 +1,7 @@
 --! file: main.lua
 
 local json = require( "external.json" )
+local tick = require( "external.tick" )
 local _ = require( "units.debug" )
 
 local Vector2 = require( "units.vector2" )
@@ -10,6 +11,8 @@ local Upgrader = require( "units.upgrader" )
 local Ore = require( "units.ore" )
 
 local TileGrid = require( "units.tile_grid" )
+
+SCREEN_WIDTH = love.graphics.getWidth()
 
 local COLOR_WHITE = { 1, 1, 1, 1 }
 local COLOR_RED = { 1, 0, 0, 1 }
@@ -23,6 +26,13 @@ local ores = {}
 local upgrader
 local upgraderBeam
 
+local makeOre
+
+-- #FIXME: Move to utility library
+local function clamp( val, min, max )
+    return math.max( min, math.min( max, val ) )
+end
+
 function love.load()
     love.graphics.setDefaultFilter( "nearest", "nearest" )
 
@@ -34,9 +44,13 @@ function love.load()
     end )
 
     upgraderBeam = upgrader.beam
+
+    tick.recur( function()
+        makeOre()
+    end, 0.5 )
 end
 
-local function makeOre()
+makeOre = function()
     local pos = Vector2( 100, 190 + upgrader.size.y / 2 )
     local size = Vector2( 20, 20 )
     local speed = 50
@@ -45,7 +59,12 @@ local function makeOre()
 
     local value = 5
     local ore = Ore( pos, size, vel, color, value )
+
+    ore.timeSinceLastUpgrade = os.time() -- FIXME: Band-aid fix for frame debounce
+    ore.upgradeDebounceTime = 1
+
     table.insert( ores, ore )
+    print( #ores )
 end
 
 function love.keypressed( key )
@@ -55,33 +74,53 @@ function love.keypressed( key )
 end
 
 function love.update( dt )
-    for _, ore in ipairs( ores ) do
+    tick.update( dt )
+
+    if #ores == 0 then return end
+
+    for i, ore in ipairs( ores ) do
         ore:update( dt )
+        if ore.pos.x > SCREEN_WIDTH then
+            table.remove( ores, i ) -- FIXME: Garbage collection
+            goto nextOre
+        end
 
         if not upgrader:checkCollision( ore, upgraderBeam ) then goto nextOre end
+        if os.time() - ore.timeSinceLastUpgrade <= ore.upgradeDebounceTime then goto nextOre end
+
+        ore.timeSinceLastUpgrade = os.time()
+
+        local oreValue = ore.value
 
         local upgraderTag = upgrader.tag
-        local oreTags = ore.tags
 
-        local tagOnOre = oreTags[upgraderTag]
+        local tagName = upgraderTag.name
+        local tagMaxUses = upgraderTag.maxUses
 
-        if not tagOnOre or tagOnOre["upgradeCount"] >= tagOnOre["maxUses"] then
+        if not ore.tags[tagName] then
+            ore.tags[tagName] = upgraderTag
+        end
+
+        if ore.tags[tagName].upgradeCount <= tagMaxUses then
+            upgrader.callback( ore )
+            ore.tags[tagName].upgradeCount = clamp( ore.tags[tagName].upgradeCount + 1, 0, tagMaxUses )
+            table.insert( ore.upgradeHistory, tagName )
+
+            print( "(" .. tostring( ore ) .. ") Upgraded value from " .. oreValue .. " to " .. ore.value )
+
+            local alpha = 0.5 -- lerp intensity
+            ore.color = {
+                ( 1 - alpha ) * ore.color[1] + alpha * COLOR_BEAM[1],
+                ( 1 - alpha ) * ore.color[2] + alpha * COLOR_BEAM[2],
+                ( 1 - alpha ) * ore.color[3] + alpha * COLOR_BEAM[3],
+                --( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
+            }
+        else
             print( "(" .. tostring( ore ) .. ") Failed upgrade" )
             ore.color = COLOR_RED
 
-            goto nextOre -- LÖVE does not support continue
+            goto nextOre
         end
-
-        upgrader.callback( ore )
-        print( "(" .. tostring( ore ) .. ") Value updated to " .. ore.value )
-
-        local alpha = 0.01
-        ore.color = {
-            ( 1 - alpha ) * ore.color[1] + alpha * COLOR_BEAM[1],
-            ( 1 - alpha ) * ore.color[2] + alpha * COLOR_BEAM[2],
-            ( 1 - alpha ) * ore.color[3] + alpha * COLOR_BEAM[3],
-            ( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
-        }
 
         ::nextOre::
     end
