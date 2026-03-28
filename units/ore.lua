@@ -1,8 +1,4 @@
 local Destroyable = require( "classes.destroyable" )
-local Vector2 = require( "units.vector2" )
-
-local COLOR_WHITE = { 1, 1, 1, 1 }
-
 local Ore = Destroyable:subclass( "Ore" )
 
 
