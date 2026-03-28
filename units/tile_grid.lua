@@ -3,11 +3,17 @@ local Vector2 = require( "units.vector2" )
 
 local TileGrid = middleclass.class( "TileGrid" )
 
+
+----- STATIC METHODS -----
+
 function TileGrid:initialize( gridSize, tileSize )
     self.buffer = {}
     self.gridSize = gridSize
     self.tileSize = tileSize or 1
 end
+
+
+----- INSTANCE METHODS -----
 
 function TileGrid:posToIndex( pos )
     return ( pos.y * self.size.x + pos.x ) + 1
@@ -24,5 +30,6 @@ end
 function TileGrid:getCell( pos )
     return self.buffer[self:posToIndex( pos )]
 end
+
 
 return TileGrid

@@ -12,15 +12,20 @@ local metaMethods = {
 }
 
 
-function Vector2.static:zero()
-    return Vector2( 0, 0 )
-end
+----- STATIC METHODS -----
 
 function Vector2:initialize( x, y )
     middleclass_extensions.injectMeta( self, metaMethods )
     self.x = x
     self.y = y
 end
+
+function Vector2.static:zero()
+    return Vector2( 0, 0 )
+end
+
+
+----- INSTANCE METHODS -----
 
 function Vector2:isNearlyEqual( other, epsilon )
     if epsilon == nil then epsilon = 0.001 end
@@ -46,5 +51,6 @@ function Vector2:getAngleBetween( other )
     local length2 = math.sqrt( other.x * other.x + other.y * other.y )
     return math.acos( ( self.x * other.x + self.y * other.y ) * ( length2 / length1 ) )
 end
+
 
 return Vector2

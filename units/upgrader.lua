@@ -8,6 +8,8 @@ local DEFAULT_BEAM_COLOR = { 0, 1, 1, 0.3 }
 local Upgrader = Building:subclass( "Upgrader" )
 
 
+----- STATIC METHODS -----
+
 function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
     Upgrader.super.initialize( self, pos, Vector2( 128, 128 ), "res/upgrader.png" )
     self.beamColor = beamColor or DEFAULT_BEAM_COLOR
@@ -19,6 +21,9 @@ function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
 
     self.callback = upgradeCallback
 end
+
+
+----- INSTANCE METHODS -----
 
 function Upgrader:checkCollision( objA, objB )
     return collision.checkAABB( objA, objB )
