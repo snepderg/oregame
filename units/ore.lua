@@ -1,11 +1,11 @@
-local Object = require( "external.classic" )
+local middleclass = require( "external.middleclass.middleclass" )
 local Vector2 = require( "units.vector2" )
 
 local COLOR_WHITE = { 1, 1, 1, 1 }
 
-local Ore = Object:extend()
+local Ore = middleclass.class( "Ore" )
 
-function Ore:new( pos, size, vel, color, value, tags )
+function Ore:initialize( pos, size, vel, color, value, tags )
     self.pos = pos
     self.size = size
     self.vel = vel

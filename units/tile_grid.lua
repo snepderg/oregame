@@ -1,9 +1,9 @@
-local Object = require( "external.classic" )
+local middleclass = require( "external.middleclass.middleclass" )
 local Vector2 = require( "units.vector2" )
 
-local TileGrid = Object:extend()
+local TileGrid = middleclass.class( "TileGrid" )
 
-function TileGrid:new( gridSize, tileSize )
+function TileGrid:initialize( gridSize, tileSize )
     self.buffer = {}
     self.gridSize = gridSize
     self.tileSize = tileSize or 1

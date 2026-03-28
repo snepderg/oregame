@@ -1,9 +1,9 @@
-local Object = require( "external.classic" )
+local middleclass = require( "external.middleclass.middleclass" )
 local Vector2 = require( "units.vector2" )
 
-local Building = Object:extend()
+local Building = middleclass.class( "Building" )
 
-function Building:new( pos, size, image )
+function Building:initialize( pos, size, image )
     self.pos = pos
     self.size = size
     self.image = love.graphics.newImage( image )

@@ -4,7 +4,7 @@
 
 ### Dependencies
 - rxi:
-    - [classic](https://github.com/rxi/classic) (simple prototype classes)
+    - [middleclass](https://github.com/kikito/middleclass) (simple class library)
     - [tick](https://github.com/rxi/tick) (timers)
     - [json](https://github.com/rxi/json)
 

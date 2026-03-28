@@ -1,54 +1,25 @@
-local Object = require( "external.classic" )
+local middleclass = require( "external.middleclass.middleclass" )
+local middleclass_extensions = require( "lib.middleclass_extensions" )
 
-local Vector2 = Object:extend()
+local Vector2 = middleclass.class( "Vector2" )
 
-function Vector2:__index( key )
-    if key == "x" then
-        return rawget( self, 1 )
-    elseif key == "y" then
-        return rawget( self, 2 )
-    else
-        return getmetatable( self )[key]
-    end
-end
+local metaMethods = {
+    __add = function( lhs, rhs ) return Vector2( lhs.x + rhs.x, lhs.y + rhs.y ) end,
+    __sub = function( lhs, rhs ) return Vector2( lhs.x - rhs.x, lhs.y - rhs.y ) end,
+    __mul = function( lhs, rhs ) return Vector2( lhs.x * rhs.x, lhs.y * rhs.y ) end,
+    __div = function( lhs, rhs ) return Vector2( lhs.x / rhs.x, lhs.y / rhs.y ) end,
+    __eq = function( lhs, rhs ) return lhs.x == rhs.x and lhs.y == rhs.y end,
+}
 
-function Vector2:__newindex( key, value )
-    if key == "x" then
-        rawset( self, 1, value )
-    elseif key == "y" then
-        rawset( self, 2, value )
-    else
-        getmetatable( self )[key] = value
-    end
-end
 
 function Vector2:Zero()
     return Vector2( 0, 0 )
 end
 
-function Vector2:new( x, y )
+function Vector2:initialize( x, y )
+    middleclass_extensions.injectMeta( self, metaMethods )
     self.x = x
     self.y = y
-end
-
-function Vector2.__add( lhs, rhs )
-    return Vector2( lhs.x + rhs.x, lhs.y + rhs.y )
-end
-
-function Vector2.__sub( lhs, rhs )
-    return Vector2( lhs.x - rhs.x, lhs.y - rhs.y )
-end
-
-function Vector2.__mul( lhs, rhs )
-    return Vector2( lhs.x * rhs.x, lhs.y * rhs.y )
-end
-
-function Vector2.__div( lhs, rhs )
-    return Vector2( lhs.x / rhs.x, lhs.y / rhs.y )
-end
-
-function Vector2.__eq( lhs, rhs )
-    return lhs.x == rhs.x and lhs.y == rhs.y
 end
 
 function Vector2:IsNearlyEqual( other, epsilon )

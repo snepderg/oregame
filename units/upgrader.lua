@@ -5,11 +5,11 @@ local collision = require( "units.collision" )
 
 local DEFAULT_BEAM_COLOR = { 0, 1, 1, 0.3 }
 
-local Upgrader = Building:extend()
+local Upgrader = Building:subclass( "Upgrader" )
 
 
-function Upgrader:new( pos, tag, beamColor, upgradeCallback )
-    Upgrader.super.new( self, pos, Vector2( 128, 128 ), "res/upgrader.png" )
+function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
+    Upgrader.super.initialize( self, pos, Vector2( 128, 128 ), "res/upgrader.png" )
     self.beamColor = beamColor or DEFAULT_BEAM_COLOR
 
     self.beam = {}
