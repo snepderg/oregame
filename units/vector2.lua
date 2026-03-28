@@ -12,7 +12,7 @@ local metaMethods = {
 }
 
 
-function Vector2:zero()
+function Vector2.static:zero()
     return Vector2( 0, 0 )
 end
 
