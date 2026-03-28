@@ -8,7 +8,6 @@ local TileGrid = require( "units.tile_grid" )
 local Ore = require( "units.ore" )
 local Upgrader = require( "units.upgrader" )
 local Conveyor = require( "units.conveyor" )
---local UpgraderBeam = require( "units.upgrader_beam" )
 
 local COLOR_WHITE = { 1, 1, 1, 1 }
 local COLOR_RED = { 1, 0, 0, 1 }
@@ -49,25 +48,6 @@ function love.keypressed( key )
         makeOre()
     end
 end
-
---[[
-local function checkCollisions( a, b )
-    local aLeft = a.pos.x
-    local aRight = a.pos.x + a.size.x
-    local aTop = a.pos.y
-    local aBottom = a.pos.y + a.size.y
-
-    local bLeft = b.pos.x
-    local bRight = b.pos.x + b.size.x
-    local bTop = b.pos.y
-    local bBottom = b.pos.y + b.size.y
-
-    return aRight > bLeft
-        and aLeft < bRight
-        and aBottom > bTop
-        and aTop < bBottom
-end
-]]
 
 function love.update( dt )
     for _, ore in ipairs( ores ) do

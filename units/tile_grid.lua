@@ -1,7 +1,7 @@
 local Object = require( "external.classic" )
 local Vector2 = require( "units.vector2" )
 
-local TileGrid = Object:extend() 
+local TileGrid = Object:extend()
 
 function TileGrid:new( gridSize, tileSize )
     self.buffer = {}

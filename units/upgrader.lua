@@ -33,7 +33,7 @@ function Upgrader:CheckCollisions( ore )
     local bRight = ore.pos.x + ore.size.x
     local bTop = ore.pos.y
     local bBottom = ore.pos.y + ore.size.y
-    
+
     return aRight > bLeft
         and aLeft < bRight
         and aBottom > bTop
@@ -42,15 +42,15 @@ end
 
 function Upgrader:draw()
     Upgrader.super.draw(self)
-    
+
     local prevColor = { love.graphics.getColor() }
     love.graphics.setColor( self.beamColor )
     love.graphics.rectangle(
-        "fill", 
-        self.beam.pos.x, 
-        self.beam.pos.y, 
-        self.beam.size.x, 
-        self.beam.size.y 
+        "fill",
+        self.beam.pos.x,
+        self.beam.pos.y,
+        self.beam.size.x,
+        self.beam.size.y
     )
     love.graphics.setColor( prevColor )
 end
