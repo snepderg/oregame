@@ -3,4 +3,7 @@
 - inspired by Miner's Haven and Pipegame
 
 ### Dependencies:
-- rxi: [tick](https://github.com/rxi/tick) (timers), [classic](https://github.com/rxi/classic) (simple prototype classes)
+- rxi:
+    - [classic](https://github.com/rxi/classic) (simple prototype classes)
+    - [tick](https://github.com/rxi/tick) (timers),
+    - [json](https://github.com/rxi/json)
