@@ -11,4 +11,11 @@ function Conveyor:initialize( pos, size )
 end
 
 
+----- IMPLEMENTED METHODS -----
+
+function Conveyor:onDestroyed()
+    -- TODO
+end
+
+
 return Building

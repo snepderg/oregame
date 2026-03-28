@@ -46,4 +46,11 @@ function Upgrader:draw()
 end
 
 
+----- IMPLEMENTED METHODS -----
+
+function Upgrader:onDestroyed()
+    -- TODO
+end
+
+
 return Upgrader

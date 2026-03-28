@@ -1,7 +1,7 @@
-local middleclass = require( "external.middleclass.middleclass" )
+local Destroyable = require( "classes.destroyable" )
 local Vector2 = require( "units.vector2" )
 
-local TileGrid = middleclass.class( "TileGrid" )
+local TileGrid = Destroyable:subclass( "TileGrid" )
 
 
 ----- STATIC METHODS -----
@@ -29,6 +29,21 @@ end
 
 function TileGrid:getCell( pos )
     return self.buffer[self:posToIndex( pos )]
+end
+
+
+----- IMPLEMENTED METHODS -----
+
+function TileGrid:onDestroyed()
+    local buffer = self.buffer
+
+    for k, v in pairs( buffer ) do
+        buffer[k] = nil
+
+        if isValid( v ) then
+            v:destroy()
+        end
+    end
 end
 
 

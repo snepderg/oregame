@@ -1,9 +1,9 @@
-local middleclass = require( "external.middleclass.middleclass" )
+local Destroyable = require( "classes.destroyable" )
 local Vector2 = require( "units.vector2" )
 
 local COLOR_WHITE = { 1, 1, 1, 1 }
 
-local Ore = middleclass.class( "Ore" )
+local Ore = Destroyable:subclass( "Ore" )
 
 
 ----- STATIC METHODS -----
@@ -34,6 +34,13 @@ function Ore:draw()
     love.graphics.setColor( self.color )
     love.graphics.rectangle( self.mode, self.pos.x, self.pos.y, self.size.x, self.size.y )
     love.graphics.setColor( prevColor )
+end
+
+
+----- IMPLEMENTED METHODS -----
+
+function Ore:onDestroyed()
+    -- TODO
 end
 
 
