@@ -58,7 +58,7 @@ function love.update( dt )
     for _, ore in ipairs( ores ) do
         ore:update( dt )
 
-        if not upgrader:CheckCollision( ore, upgraderBeam ) then goto nextOre end
+        if not upgrader:checkCollision( ore, upgraderBeam ) then goto nextOre end
 
         local upgraderTag = upgrader.tag
         local oreTags = ore.tags

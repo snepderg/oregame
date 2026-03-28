@@ -9,20 +9,20 @@ function TileGrid:initialize( gridSize, tileSize )
     self.tileSize = tileSize or 1
 end
 
-function TileGrid:PositionToIndex( position )
-    return ( position.y * self.size.x + position.x ) + 1
+function TileGrid:posToIndex( pos )
+    return ( pos.y * self.size.x + pos.x ) + 1
 end
 
-function TileGrid:IndexToPosition( index )
+function TileGrid:indexToPos( index )
     return Vector2( ( index - 1 ) % self.size.x, math.ceil( index / self.size.x ) - 1 )
 end
 
-function TileGrid:SetCell( position, building )
-    self.buffer[self:PositionToIndex( position )] = building
+function TileGrid:setCell( pos, building )
+    self.buffer[self:posToIndex( pos )] = building
 end
 
-function TileGrid:GetCell( position )
-    return self.buffer[self:PositionToIndex( position )]
+function TileGrid:getCell( pos )
+    return self.buffer[self:posToIndex( pos )]
 end
 
 return TileGrid

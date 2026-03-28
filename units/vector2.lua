@@ -12,7 +12,7 @@ local metaMethods = {
 }
 
 
-function Vector2:Zero()
+function Vector2:zero()
     return Vector2( 0, 0 )
 end
 
@@ -22,27 +22,26 @@ function Vector2:initialize( x, y )
     self.y = y
 end
 
-function Vector2:IsNearlyEqual( other, epsilon )
+function Vector2:isNearlyEqual( other, epsilon )
     if epsilon == nil then epsilon = 0.001 end
 
     return not ( ( self.x > other.x + epsilon ) or ( self.x < other.x - epsilon ) or ( self.y > other.y + epsilon ) or ( self.y < other.y - epsilon ) )
 end
 
-function Vector2:Dot( other )
+function Vector2:dot( other )
     return self.x * other.x + self.y * other.y
 end
 
-function Vector2:Length()
+function Vector2:length()
     return math.sqrt( self.x * self.x + self.y * self.y )
 end
 
-function Vector2:Normalize()
+function Vector2:normalize()
     local max = math.max( self.x, self.y )
     return Vector2( self.x / max, self.y / max )
 end
 
-function Vector2:Angle( other )
-
+function Vector2:getAngleBetween( other )
     local length1 = math.sqrt( self.x * self.x + self.y * self.y )
     local length2 = math.sqrt( other.x * other.x + other.y * other.y )
     return math.acos( ( self.x * other.x + self.y * other.y ) * ( length2 / length1 ) )

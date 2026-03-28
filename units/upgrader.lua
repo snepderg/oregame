@@ -20,7 +20,7 @@ function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
     self.callback = upgradeCallback
 end
 
-function Upgrader:CheckCollision( objA, objB )
+function Upgrader:checkCollision( objA, objB )
     return collision.checkAABB( objA, objB )
 end
 
