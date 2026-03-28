@@ -1,5 +1,3 @@
---! file: debug.lua
-
 io.stdout:setvbuf( "no" )
 
 if arg[2] == "debug" then
