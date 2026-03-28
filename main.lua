@@ -21,7 +21,7 @@ local COLOR_ORE = { 1, 0.75, 0, 1 }
 
 local COLOR_BEAM = { 0, 1, 1, 0.3 }
 
-local ores = {}
+local ores = {} -- TODO: Have a global table tracking ores and tie it to :initialize() and :onDestroyed(). Should it be done in Ore or a base class?
 
 local upgrader
 local upgraderBeam
