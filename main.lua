@@ -1,13 +1,15 @@
 --! file: main.lua
 
 local json = require( "external.json" )
-
 local _ = require( "units.debug" )
+
 local Vector2 = require( "units.vector2" )
-local TileGrid = require( "units.tile_grid" )
-local Ore = require( "units.ore" )
-local Upgrader = require( "units.upgrader" )
+
 local Conveyor = require( "units.conveyor" )
+local Upgrader = require( "units.upgrader" )
+local Ore = require( "units.ore" )
+
+local TileGrid = require( "units.tile_grid" )
 
 local COLOR_WHITE = { 1, 1, 1, 1 }
 local COLOR_RED = { 1, 0, 0, 1 }
@@ -19,6 +21,7 @@ local COLOR_BEAM = { 0, 1, 1, 0.3 }
 local ores = {}
 
 local upgrader
+local upgraderBeam
 
 function love.load()
     love.graphics.setDefaultFilter( "nearest", "nearest" )
@@ -29,6 +32,8 @@ function love.load()
     upgrader = Upgrader( upgraderPos, upgraderTag, nil, function( ore )
         ore.value = ore.value * 2
     end )
+
+    upgraderBeam = upgrader.beam
 end
 
 local function makeOre()
@@ -53,6 +58,8 @@ function love.update( dt )
     for _, ore in ipairs( ores ) do
         ore:update( dt )
 
+        if not upgrader:CheckCollision( ore, upgraderBeam ) then goto nextOre end
+
         local upgraderTag = upgrader.tag
         local oreTags = ore.tags
 
@@ -62,18 +69,21 @@ function love.update( dt )
             print( "(" .. tostring( ore ) .. ") Failed upgrade" )
             ore.color = COLOR_RED
 
-        else
-            upgrader.callback( ore )
-            print( "(" .. tostring( ore ) .. ") Value updated to " .. ore.value )
-
-            local alpha = 0.01
-            ore.color = {
-                ( 1 - alpha ) * ore.color[1] + alpha * COLOR_BEAM[1],
-                ( 1 - alpha ) * ore.color[2] + alpha * COLOR_BEAM[2],
-                ( 1 - alpha ) * ore.color[3] + alpha * COLOR_BEAM[3],
-                ( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
-            }
+            goto nextOre -- LÖVE does not support continue
         end
+
+        upgrader.callback( ore )
+        print( "(" .. tostring( ore ) .. ") Value updated to " .. ore.value )
+
+        local alpha = 0.01
+        ore.color = {
+            ( 1 - alpha ) * ore.color[1] + alpha * COLOR_BEAM[1],
+            ( 1 - alpha ) * ore.color[2] + alpha * COLOR_BEAM[2],
+            ( 1 - alpha ) * ore.color[3] + alpha * COLOR_BEAM[3],
+            ( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
+        }
+
+        ::nextOre::
     end
 end
 
