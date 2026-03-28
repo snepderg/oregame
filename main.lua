@@ -22,37 +22,7 @@ local ores = {}
 local upgrader
 
 function love.load()
-
     love.graphics.setDefaultFilter( "nearest", "nearest" )
-
-    --[[
-    upgrader.x = 200
-    upgrader.y = 200
-    upgrader.size = 4
-    upgrader.image = love.graphics.newImage( "res/upgrader.png" )
-    upgrader.width = upgrader.image:getWidth() * upgrader.size
-    upgrader.height = upgrader.image:getHeight() * upgrader.size
-    upgrader.beam = beam
-    ]]
-
-    --[[
-    local upgraderPos = Vector2( 200, 200 )
-    local upgraderSize = Vector2( 4, 4 )
-    -- Makes Upgrader Tier 1 have a max use of 1
-    local upgraderTag = { "upgrader_tier1", 1 } -- Ore: { upgrader_tier1 = { current, max } }
-
-    upgrader = Upgrader( upgraderPos, upgraderSize, upgraderTag )
-
-    beam = UpgraderBeam(
-        Vector2( upgrader.x + ( upgrader.width / 2 ) - upgrader.size * 2, upgrader.y + upgrader.size * UPGRADER_PIXEL_OFFSET ),
-        Vector2( upgrader.size * 4, upgrader.height - upgrader.size * 4 ),
-        function( ore )
-            return ore.value * 2
-        end
-    )
-
-    print( beam.width )
-    ]]
 
     local upgraderPos = Vector2( 200, 200 )
     local upgraderTag = { name = "upgrader_tier1", upgradeCount = 0, maxUses = 1 }
@@ -82,7 +52,6 @@ end
 
 --[[
 local function checkCollisions( a, b )
-
     local aLeft = a.pos.x
     local aRight = a.pos.x + a.size.x
     local aTop = a.pos.y
