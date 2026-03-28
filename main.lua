@@ -1,5 +1,3 @@
---! file: main.lua
-
 local json = require( "external.json" )
 local tick = require( "external.tick" )
 local _ = require( "units.debug" )
