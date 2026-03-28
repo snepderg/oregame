@@ -1,4 +1,7 @@
 {
+    "Lua.workspace.ignoreDir": [
+        "external"
+    ],
     "Lua.diagnostics.globals": [
         "love",
         "lldebugger"
