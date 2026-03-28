@@ -40,9 +40,9 @@ function love.load()
     local upgraderSize = Vector2( 4, 4 )
     -- Makes Upgrader Tier 1 have a max use of 1
     local upgraderTag = { "upgrader_tier1", 1 } -- Ore: { upgrader_tier1 = { current, max } }
-    
+
     upgrader = Upgrader( upgraderPos, upgraderSize, upgraderTag )
-    
+
     beam = UpgraderBeam(
         Vector2( upgrader.x + ( upgrader.width / 2 ) - upgrader.size * 2, upgrader.y + upgrader.size * UPGRADER_PIXEL_OFFSET ),
         Vector2( upgrader.size * 4, upgrader.height - upgrader.size * 4 ),
@@ -56,8 +56,8 @@ function love.load()
 
     local upgraderPos = Vector2( 200, 200 )
     local upgraderTag = { name = "upgrader_tier1", upgradeCount = 0, maxUses = 1 }
-    
-    upgrader = Upgrader( upgraderPos, upgraderTag, nil, function( ore ) 
+
+    upgrader = Upgrader( upgraderPos, upgraderTag, nil, function( ore )
         ore.value = ore.value * 2
     end )
 end
@@ -68,7 +68,7 @@ local function makeOre()
     local speed = 50
     local vel = Vector2( speed, 0 )
     local color = COLOR_ORANGE
-    
+
     local value = 5
     local ore = Ore( pos, size, vel, color, value )
     table.insert( ores, ore )
@@ -92,7 +92,7 @@ local function checkCollisions( a, b )
     local bRight = b.pos.x + b.size.x
     local bTop = b.pos.y
     local bBottom = b.pos.y + b.size.y
-    
+
     return aRight > bLeft
         and aLeft < bRight
         and aBottom > bTop
@@ -104,17 +104,15 @@ function love.update( dt )
     for _, ore in ipairs( ores ) do
         ore:update( dt )
 
-        if not upgrader:CheckCollisions( ore, upgrader.beam ) then goto continue end
-
         local upgraderTag = upgrader.tag
         local oreTags = ore.tags
-            
+
         local tagOnOre = oreTags[upgraderTag]
-        
+
         if not tagOnOre or tagOnOre["upgradeCount"] >= tagOnOre["maxUses"] then
             print( "(" .. tostring( ore ) .. ") Failed upgrade" )
             ore.color = COLOR_RED
-            
+
         else
             upgrader.callback( ore )
             print( "(" .. tostring( ore ) .. ") Value updated to " .. ore.value )
@@ -127,8 +125,6 @@ function love.update( dt )
                 ( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
             }
         end
-
-        ::continue::
     end
 end
 
