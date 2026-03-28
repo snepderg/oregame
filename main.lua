@@ -12,6 +12,8 @@ local Ore = require( "units.ore" )
 
 local TileGrid = require( "units.tile_grid" )
 
+SCREEN_WIDTH = love.graphics.getWidth()
+
 local COLOR_WHITE = { 1, 1, 1, 1 }
 local COLOR_RED = { 1, 0, 0, 1 }
 local COLOR_ORANGE = { 0.5, 0.75, 0, 1 }
@@ -44,7 +46,6 @@ function love.load()
     upgraderBeam = upgrader.beam
 
     tick.recur( function()
-        print( "idiot" )
         makeOre()
     end, 0.5 )
 end
@@ -63,6 +64,7 @@ makeOre = function()
     ore.upgradeDebounceTime = 1
 
     table.insert( ores, ore )
+    print( #ores )
 end
 
 function love.keypressed( key )
@@ -76,11 +78,15 @@ function love.update( dt )
 
     if #ores == 0 then return end
 
-    for _, ore in ipairs( ores ) do
+    for i, ore in ipairs( ores ) do
         ore:update( dt )
+        if ore.pos.x > SCREEN_WIDTH then
+            table.remove( ores, i ) -- FIXME: Garbage collection
+            goto nextOre
+        end
 
         if not upgrader:checkCollision( ore, upgraderBeam ) then goto nextOre end
-        if os.time() - ore.timeSinceLastUpgrade <= ore.upgradeDebounceTime then return end
+        if os.time() - ore.timeSinceLastUpgrade <= ore.upgradeDebounceTime then goto nextOre end
 
         ore.timeSinceLastUpgrade = os.time()
 
@@ -102,12 +108,12 @@ function love.update( dt )
 
             print( "(" .. tostring( ore ) .. ") Upgraded value from " .. oreValue .. " to " .. ore.value )
 
-            local alpha = 0.1 -- lerp intensity
+            local alpha = 0.5 -- lerp intensity
             ore.color = {
                 ( 1 - alpha ) * ore.color[1] + alpha * COLOR_BEAM[1],
                 ( 1 - alpha ) * ore.color[2] + alpha * COLOR_BEAM[2],
                 ( 1 - alpha ) * ore.color[3] + alpha * COLOR_BEAM[3],
-                ( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
+                --( 1 - alpha ) * ore.color[4] + alpha * COLOR_BEAM[4]
             }
         else
             print( "(" .. tostring( ore ) .. ") Failed upgrade" )
