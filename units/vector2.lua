@@ -1,21 +1,11 @@
 local middleclass = require( "external.middleclass.middleclass" )
-local middleclass_extensions = require( "lib.middleclass_extensions" )
 
 local Vector2 = middleclass.class( "Vector2" )
-
-local metaMethods = {
-    __add = function( lhs, rhs ) return Vector2( lhs.x + rhs.x, lhs.y + rhs.y ) end,
-    __sub = function( lhs, rhs ) return Vector2( lhs.x - rhs.x, lhs.y - rhs.y ) end,
-    __mul = function( lhs, rhs ) return Vector2( lhs.x * rhs.x, lhs.y * rhs.y ) end,
-    __div = function( lhs, rhs ) return Vector2( lhs.x / rhs.x, lhs.y / rhs.y ) end,
-    __eq = function( lhs, rhs ) return lhs.x == rhs.x and lhs.y == rhs.y end,
-}
 
 
 ----- STATIC METHODS -----
 
 function Vector2:initialize( x, y )
-    middleclass_extensions.injectMeta( self, metaMethods )
     self.x = x
     self.y = y
 end
@@ -26,6 +16,26 @@ end
 
 
 ----- INSTANCE METHODS -----
+
+function Vector2:__add( lhs, rhs )
+    return Vector2( lhs.x + rhs.x, lhs.y + rhs.y )
+end
+
+function Vector2:__sub( lhs, rhs )
+    return Vector2( lhs.x - rhs.x, lhs.y - rhs.y )
+end
+
+function Vector2:__mul( lhs, rhs )
+    return Vector2( lhs.x * rhs.x, lhs.y * rhs.y )
+end
+
+function Vector2:__div( lhs, rhs )
+    return Vector2( lhs.x / rhs.x, lhs.y / rhs.y )
+end
+
+function Vector2:__eq( lhs, rhs )
+    return lhs.x == rhs.x and lhs.y == rhs.y
+end
 
 function Vector2:isNearlyEqual( other, epsilon )
     if epsilon == nil then epsilon = 0.001 end
