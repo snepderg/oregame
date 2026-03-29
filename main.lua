@@ -1,5 +1,6 @@
 local json = require( "external.json" )
 local tick = require( "external.tick" )
+local utils = require( "lib.utils" )
 local _ = require( "units.debug" )
 
 local Vector2 = require( "units.vector2" )
@@ -9,6 +10,8 @@ local Upgrader = require( "units.upgrader" )
 local Ore = require( "units.ore" )
 
 local TileGrid = require( "units.tile_grid" )
+
+local clamp = utils.clamp
 
 SCREEN_WIDTH = love.graphics.getWidth()
 
@@ -25,11 +28,6 @@ local upgrader
 local upgraderBeam
 
 local makeOre
-
--- #FIXME: Move to utility library
-local function clamp( val, min, max )
-    return math.max( min, math.min( max, val ) )
-end
 
 function love.load()
     love.graphics.setDefaultFilter( "nearest", "nearest" )
