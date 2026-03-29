@@ -24,5 +24,4 @@ function utils.isFunction( x )
     return IS_FUNCTION_LOOKUP[type( x )] == true
 end
 
-
 return utils

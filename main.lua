@@ -1,6 +1,7 @@
+require( "lib.math" )
+
 local json = require( "external.json" )
 local tick = require( "external.tick" )
-local utils = require( "lib.utils" )
 local _ = require( "units.debug" )
 
 local Vector2 = require( "units.vector2" )
@@ -11,7 +12,7 @@ local Ore = require( "units.ore" )
 
 local TileGrid = require( "units.tile_grid" )
 
-local clamp = utils.clamp
+local clamp = math.clamp
 
 SCREEN_WIDTH = love.graphics.getWidth()
 
