@@ -11,6 +11,8 @@ local Upgrader = require( "units.upgrader" )
 local Ore = require( "units.ore" )
 
 local TileGrid = require( "units.tile_grid" )
+local Scene = require( "units.scene" )
+local GameObject = require( "units.game_object" )
 
 SCREEN_WIDTH = love.graphics.getWidth()
 
@@ -27,6 +29,10 @@ local upgrader
 local upgraderBeam
 
 local makeOre
+
+local worldScene = Scene()
+
+worldScene:getRoot():addChild( GameObject() )
 
 -- #FIXME: Move to utility library
 local function clamp( val, min, max )
@@ -48,6 +54,8 @@ function love.load()
     tick.recur( function()
         makeOre()
     end, 0.5 )
+
+    worldScene:start()
 end
 
 makeOre = function()
@@ -74,6 +82,8 @@ function love.keypressed( key )
 end
 
 function love.update( dt )
+    worldScene:tickUpdate()
+
     tick.update( dt )
 
     if #ores == 0 then return end
@@ -127,6 +137,8 @@ function love.update( dt )
 end
 
 function love.draw()
+    worldScene:frameUpdate()
+
     upgrader:draw()
 
     for _, ore in ipairs( ores ) do
