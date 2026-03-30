@@ -49,5 +49,4 @@ function GameObject2D:getModelProjection()
     return self._modelProjection
 end
 
-
 return GameObject2D

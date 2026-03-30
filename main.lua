@@ -13,6 +13,9 @@ local Ore = require( "units.ore" )
 local TileGrid = require( "units.tile_grid" )
 local Scene = require( "units.scene" )
 local GameObject = require( "units.game_object" )
+local Camera = require( "units.camera" )
+
+love.graphics.setDefaultFilter( "nearest", "nearest" )
 
 SCREEN_WIDTH = love.graphics.getWidth()
 
@@ -25,36 +28,21 @@ local COLOR_BEAM = { 0, 1, 1, 0.3 }
 
 local ores = {} -- TODO: Have a static table tracking ores and tie it to :initialize() and :onDestroyed(). Should it be done in Ore or a base class?
 
-local upgrader
-local upgraderBeam
+local upgraderTag = { name = "upgrader_tier1", upgradeCount = 0, maxUses = 1 }
+
+local upgrader = Upgrader( Vector2( 0, 0 ), upgraderTag, nil, function( ore )
+    ore.value = ore.value * 2
+end )
 
 local makeOre
 
 local worldScene = Scene()
-
-worldScene:getRoot():addChild( GameObject() )
-
--- #FIXME: Move to utility library
-local function clamp( val, min, max )
-    return math.max( min, math.min( max, val ) )
-end
+local camera = Camera()
+worldScene:getRoot():addChild( upgrader )
+worldScene:getRoot():addChild( camera )
+camera:makeCurrent()
 
 function love.load()
-    love.graphics.setDefaultFilter( "nearest", "nearest" )
-
-    local upgraderPos = Vector2( 200, 200 )
-    local upgraderTag = { name = "upgrader_tier1", upgradeCount = 0, maxUses = 1 }
-
-    upgrader = Upgrader( upgraderPos, upgraderTag, nil, function( ore )
-        ore.value = ore.value * 2
-    end )
-
-    upgraderBeam = upgrader.beam
-
-    tick.recur( function()
-        makeOre()
-    end, 0.5 )
-
     worldScene:start()
 end
 
@@ -82,6 +70,21 @@ function love.keypressed( key )
 end
 
 function love.update( dt )
+
+    local speed = 100
+    if love.keyboard.isDown( "w" ) then
+        camera:setPosition( camera:getPosition() + Vector2( 0, speed * dt ) )
+    end
+    if love.keyboard.isDown( "a" ) then
+        camera:setPosition( camera:getPosition() + Vector2( -speed * dt, 0 ) )
+    end
+    if love.keyboard.isDown( "s" ) then
+        camera:setPosition( camera:getPosition() + Vector2( 0, -speed * dt ) )
+    end
+    if love.keyboard.isDown( "d" ) then
+        camera:setPosition( camera:getPosition() + Vector2( speed * dt, 0 ) )
+    end
+
     worldScene:tickUpdate()
 
     tick.update( dt )
@@ -95,14 +98,12 @@ function love.update( dt )
             goto nextOre
         end
 
-        if not upgrader:checkCollision( ore, upgraderBeam ) then goto nextOre end
+        if not upgrader:checkCollision( ore, upgrader.beam ) then goto nextOre end
         if os.time() - ore.timeSinceLastUpgrade <= ore.upgradeDebounceTime then goto nextOre end
 
         ore.timeSinceLastUpgrade = os.time()
 
         local oreValue = ore.value
-
-        local upgraderTag = upgrader.tag
 
         local tagName = upgraderTag.name
         local tagMaxUses = upgraderTag.maxUses
@@ -138,8 +139,6 @@ end
 
 function love.draw()
     worldScene:frameUpdate()
-
-    upgrader:draw()
 
     for _, ore in ipairs( ores ) do
         ore:draw()

@@ -1,7 +1,7 @@
 local GameObject2D = require( "units.game_object_2d" )
 local Vector2 = require( "units.vector2" )
 
-local Camera = GameObject2D:subclass( "GameObject2D" )
+local Camera = GameObject2D:subclass( "Camera" )
 
 ----- STATIC METHODS -----
 

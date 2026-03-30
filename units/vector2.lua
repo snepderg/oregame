@@ -17,23 +17,23 @@ end
 
 ----- INSTANCE METHODS -----
 
-function Vector2:__add( lhs, rhs )
+function Vector2.__add( lhs, rhs )
     return Vector2( lhs.x + rhs.x, lhs.y + rhs.y )
 end
 
-function Vector2:__sub( lhs, rhs )
+function Vector2.__sub( lhs, rhs )
     return Vector2( lhs.x - rhs.x, lhs.y - rhs.y )
 end
 
-function Vector2:__mul( lhs, rhs )
+function Vector2.__mul( lhs, rhs )
     return Vector2( lhs.x * rhs.x, lhs.y * rhs.y )
 end
 
-function Vector2:__div( lhs, rhs )
+function Vector2.__div( lhs, rhs )
     return Vector2( lhs.x / rhs.x, lhs.y / rhs.y )
 end
 
-function Vector2:__eq( lhs, rhs )
+function Vector2.__eq( lhs, rhs )
     return lhs.x == rhs.x and lhs.y == rhs.y
 end
 
