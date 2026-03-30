@@ -1,5 +1,5 @@
-local Vector2 = require( "units.vector2" )
 local Building = require( "units.building" )
+local Vector2 = require( "units.vector2" )
 
 local collision = require( "units.collision" )
 

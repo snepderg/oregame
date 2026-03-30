@@ -1,6 +1,4 @@
 local Destroyable = require( "classes.destroyable" )
-local Vector2 = require( "units.vector2" )
-
 local Building = Destroyable:subclass( "Building" )
 
 

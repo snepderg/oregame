@@ -1,4 +1,4 @@
---! file: main.lua
+require( "lib.math" )
 
 local json = require( "external.json" )
 local tick = require( "external.tick" )
@@ -113,7 +113,7 @@ function love.update( dt )
 
         if ore.tags[tagName].upgradeCount <= tagMaxUses then
             upgrader.callback( ore )
-            ore.tags[tagName].upgradeCount = clamp( ore.tags[tagName].upgradeCount + 1, 0, tagMaxUses )
+            ore.tags[tagName].upgradeCount = math.clamp( ore.tags[tagName].upgradeCount + 1, 0, tagMaxUses )
             table.insert( ore.upgradeHistory, tagName )
 
             print( "(" .. tostring( ore ) .. ") Upgraded value from " .. oreValue .. " to " .. ore.value )
