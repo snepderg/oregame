@@ -21,7 +21,6 @@ end
 function GameObject2D:setPosition( newPosition )
     self._position = newPosition
     self._modelProjection:setTransformation( self._position.x, self._position.y, self._rotation, self._scale.x, self._scale.y )
-    
 end
 
 function GameObject2D:getPosition()
@@ -48,11 +47,6 @@ end
 
 function GameObject2D:getModelProjection()
     return self._modelProjection
-end
-
-function GameObject2D:frameUpdate()
-    --love.graphics.setColor( 1, 1, 1, 1 )
-    love.graphics.points( self:getPosition().x, self:getPosition().y )
 end
 
 
