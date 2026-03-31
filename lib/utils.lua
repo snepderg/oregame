@@ -24,4 +24,15 @@ function utils.isFunction( x )
     return IS_FUNCTION_LOOKUP[type( x )] == true
 end
 
+function utils.bind( func, ... )
+    local boundArgs = { ... }
+    return function( ... )
+        local totalArgs = { unpack( boundArgs ) }
+        for i = 1, select( "#", ... ) do
+            table.insert( totalArgs, select( i, ... ) )
+        end
+        return func( unpack( totalArgs ) )
+    end
+end
+
 return utils
