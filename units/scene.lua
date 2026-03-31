@@ -39,6 +39,26 @@ function Scene:start()
 
     tickObjects( self._root )
 
+    -- Because our world coordinate system represents up as +y instead of -y,
+    -- we use a shader to remap UVs as bottom-left origin instead of top-left origin so that textures are read in the correct orientation.
+    local pixelcode = [[
+    vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords )
+    {
+        vec2 bl_texture_coords = vec2(texture_coords.x, -texture_coords.y + 1);
+        vec4 texcolor = Texel(tex, bl_texture_coords);
+        return texcolor * color;
+    }
+    ]]
+
+    local vertexcode = [[
+    vec4 position( mat4 transform_projection, vec4 vertex_position )
+    {
+        return transform_projection * vertex_position;
+    }
+    ]]
+
+    local shader = love.graphics.newShader( pixelcode, vertexcode )
+    love.graphics.setShader( shader )
 end
 
 function Scene:hasStarted()
@@ -70,8 +90,8 @@ function Scene:frameUpdate( deltaTime )
     if self._activeCamera == nil then return end
 
     local screenProjection = love.math.newTransform()
+    screenProjection:translate( love.graphics.getWidth() / 2, love.graphics.getHeight() / 2 )
     screenProjection:scale( 1, -1 )
-    screenProjection:translate( love.graphics.getWidth() / 2, -love.graphics.getHeight() / 2 )
     -- Screen Space
 
     -- View Space
@@ -106,6 +126,7 @@ end
 ----- IMPLEMENTED METHODS -----
 
 function Scene:onDestroyed()
+    love.graphics.setShader()
     self._root:destroy()
 end
 
