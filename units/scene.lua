@@ -3,6 +3,9 @@ local GameObject = require( "units.game_object" )
 local GameObject2D = require( "units.game_object_2d" )
 local Camera = require( "units.camera" )
 
+local utils = require( "lib.utils" )
+
+
 local Scene = Destroyable:subclass( "Scene" )
 
 
@@ -89,35 +92,113 @@ function Scene:frameUpdate( deltaTime )
     -- Setup
     if self._activeCamera == nil then return end
 
-    local screenProjection = love.math.newTransform()
-    screenProjection:translate( love.graphics.getWidth() / 2, love.graphics.getHeight() / 2 )
-    screenProjection:scale( 1, -1 )
+    local function updateObjects( gameObject )
+        gameObject:frameUpdate( deltaTime )
+
+        local children = gameObject:getChildren()
+        for _, child in ipairs( children ) do
+            updateObjects( child )
+        end
+    end
+    updateObjects( self._root )
+
     -- Screen Space
 
     -- View Space
     love.graphics.push()
+    local screenProjection = love.math.newTransform()
+    screenProjection:translate( love.graphics.getWidth() / 2, love.graphics.getHeight() / 2 )
+    screenProjection:scale( 1, -1 )
     love.graphics.applyTransform( screenProjection )
 
     -- World Space
     love.graphics.push()
     love.graphics.applyTransform( self._activeCamera:getViewProjection() )
 
-    local function drawObjects( gameObject )
-        gameObject:frameUpdate( deltaTime )
+    local unsortedDrawQueue = {}
+    local zOccurances = {}
 
-        -- Local Space
-        love.graphics.push()
-        if gameObject:isInstanceOf( GameObject2D ) then
-            love.graphics.applyTransform( gameObject:getModelProjection() )
+    local function collectDraws( gameObject )
+
+        local function resolveGlobalTransform( target )
+            local parent = target:getParent()
+            local stackedTransform
+            if parent ~= nil then
+                stackedTransform = resolveGlobalTransform( parent )
+            else
+                stackedTransform = love.math.newTransform()
+            end
+
+            local localTransform
+            if target:isInstanceOf( "GameObject2D" ) then
+                localTransform = target:getModelProjection()
+            else
+                localTransform = love.math.newTransform()
+            end
+
+            return stackedTransform:apply( localTransform )
         end
+
+        local zIndex = gameObject.zIndex or 0
+        table.insert( unsortedDrawQueue, {
+            call = utils.bind( gameObject.draw, gameObject ),
+            zIndex = zIndex,
+            transform = resolveGlobalTransform( gameObject )
+        } )
+        if zOccurances[zIndex] == nil then
+            zOccurances[zIndex] = 0
+        end
+        zOccurances[zIndex] = zOccurances[zIndex] + 1
 
         local children = gameObject:getChildren()
         for _, child in ipairs( children ) do
-            drawObjects( child )
+            collectDraws( child )
         end
+    end
+    collectDraws( self._root )
+
+    local zLookup = {}
+    local zLookupInverse = {}
+    do
+        local currentIndex = 1
+        for k in pairs( zOccurances ) do
+            zLookup[currentIndex] = k
+            zLookupInverse[k] = currentIndex
+            currentIndex = currentIndex + 1
+        end
+    end
+    table.sort( zLookup )
+
+    local drawStartIndices = {}
+    do
+        local currentIndex = 1
+        for i in ipairs( zLookup ) do
+            local size = zOccurances[zLookup[i]]
+            table.insert( drawStartIndices, currentIndex )
+            currentIndex = currentIndex + size
+        end
+    end
+
+    local drawQueue = {}
+
+    do
+        local indexOffsets = {}
+        for i = 1, #drawStartIndices do
+            indexOffsets[i] = 0
+        end
+        for _, draw in pairs( unsortedDrawQueue ) do
+            local denseIndex = zLookupInverse[draw.zIndex]
+            drawQueue[drawStartIndices[denseIndex] + indexOffsets[denseIndex]] = draw
+            indexOffsets[denseIndex] = indexOffsets[denseIndex] + 1
+        end
+    end
+
+    for _, draw in ipairs( drawQueue ) do
+        love.graphics.push()
+        love.graphics.applyTransform( draw.transform )
+        draw.call()
         love.graphics.pop()
     end
-    drawObjects( self._root )
 
     love.graphics.pop()
     love.graphics.pop()

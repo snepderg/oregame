@@ -9,9 +9,12 @@ local GameObject2D = GameObject:subclass( "GameObject2D" )
 function GameObject2D:initialize()
     GameObject2D.super.initialize( self )
 
+    self.zIndex = 0
+
     self._position = Vector2( 0, 0 )
     self._rotation = 0
     self._scale = Vector2( 1, 1 )
+
 
     self._modelProjection = love.math.newTransform( self._position.x, self._position.y, self._rotation, self._scale.x, self._scale.y )
 end

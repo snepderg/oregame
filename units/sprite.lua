@@ -23,7 +23,7 @@ end
 
 ----- IMPLEMENTED METHODS -----
 
-function Sprite:frameUpdate( deltaTime )
+function Sprite:draw()
 
     local position = self:getPosition()
     local offset = Vector2(

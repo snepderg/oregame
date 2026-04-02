@@ -25,6 +25,7 @@ function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
     self.beam.pos = Vector2( 0, 0 )
     self.beam.color = beamColor or DEFAULT_BEAM_COLOR
     self.callback = upgradeCallback
+    self.zIndex = 1
 
     self:setPosition( pos )
 end
@@ -36,9 +37,9 @@ function Upgrader:checkCollision( objA, objB )
     return collision.checkAABB( objA, objB )
 end
 
-function Upgrader:frameUpdate()
+----- IMPLEMENTED METHODS -----
 
-    local prevColor = { love.graphics.getColor() }
+function Upgrader:draw()
     love.graphics.setColor( self.beam.color )
     love.graphics.rectangle(
         "fill",
@@ -47,12 +48,8 @@ function Upgrader:frameUpdate()
         self.beam.size.x,
         self.beam.size.y
     )
-
-    love.graphics.setColor( prevColor )
+    love.graphics.setColor( 1, 1, 1, 1 )
 end
-
-
------ IMPLEMENTED METHODS -----
 
 function Upgrader:onDestroyed()
     -- TODO

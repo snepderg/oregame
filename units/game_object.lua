@@ -66,12 +66,15 @@ end
 
 -- Called by the scene in depth first order at a fixed interval on all GameObjects
 function GameObject:tickUpdate( deltaTime )
-    --print( self .. "Tick" )
 end
 
 -- Called by the scene in depth first order on all GameObjects before drawing the frame
 function GameObject:frameUpdate( deltaTime )
-    --print( self .. "Draw" )
+end
+
+-- Called by the scene after all object's frameUpdate has been called.
+function GameObject:draw()
+
 end
 
 ----- IMPLEMENTED METHODS -----
