@@ -2,7 +2,6 @@ require( "lib.math" )
 
 local json = require( "external.json" )
 local tick = require( "external.tick" )
-local _ = require( "units.debug" )
 
 local Vector2 = require( "units.vector2" )
 
