@@ -1,37 +1,29 @@
-local Destroyable = require( "classes.destroyable" )
-local Ore = Destroyable:subclass( "Ore" )
+local Sprite = require( "units.sprite" )
+local Vector2 = require( "units.vector2" )
+local Ore = Sprite:subclass( "Ore" )
 
 
 ----- STATIC METHODS -----
 
-function Ore:initialize( pos, size, vel, color, value, tags )
-    self.pos = pos
-    self.size = size
-    self.vel = vel
-    self.color = color
+function Ore:initialize()
+    Ore.super.initialize( self )
+    self.size = Vector2:zero()
+    self.velocity = Vector2:zero()
+    self.color = { 0, 0, 0, 1 }
 
-    self.value = value or 0
-    self.tags = tags or {}
-    self.upgradeHistory = {}
+    self.value = 0
+    self.tags = {}
+    self._upgradeHistory = {}
 
-    self.mode = "fill"
+    self.texture = love.graphics.newCanvas( 1, 1 )
 end
-
 
 ----- INSTANCE METHODS -----
 
 function Ore:update( dt )
-    self.pos.x = self.pos.x + ( self.vel.x * dt )
-    self.pos.y = self.pos.y + ( self.vel.y * dt )
+    self._position.x = self._position.x + ( self.velocity.x * dt )
+    self._position.y = self._position.y + ( self.velocity.y * dt )
 end
-
-function Ore:draw()
-    local prevColor = { love.graphics.getColor() }
-    love.graphics.setColor( self.color )
-    love.graphics.rectangle( self.mode, self.pos.x, self.pos.y, self.size.x, self.size.y )
-    love.graphics.setColor( prevColor )
-end
-
 
 ----- IMPLEMENTED METHODS -----
 
@@ -39,5 +31,11 @@ function Ore:onDestroyed()
     -- TODO
 end
 
+function Ore:draw()
+    love.graphics.setCanvas( self.texture )
+    love.graphics.clear( self.color )
+    love.graphics.setCanvas()
+    Ore.super.draw( self )
+end
 
 return Ore

@@ -6,9 +6,14 @@ local Sprite = GameObject2D:subclass( "Sprite" )
 ----- STATIC METHODS -----
 
 function Sprite:initialize( imagePath )
-    Sprite.super.initialize( self )
+    Sprite.super.initialize( self );
 
-    self.texture = love.graphics.newImage( imagePath )
+    if imagePath ~= nil then
+        self.texture = love.graphics.newImage( imagePath )
+    else
+        self.texture = love.graphics.newCanvas( 1, 1 )
+    end
+
 
     self.flipH = false
     self.flipV = false

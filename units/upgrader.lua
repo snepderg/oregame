@@ -22,7 +22,7 @@ function Upgrader:initialize( pos, tag, beamColor, upgradeCallback )
     self.tag = tag
     self.beam = {}
     self.beam.size = Vector2( 8, self.sprite.size.y )
-    self.beam.pos = Vector2( 0, 0 )
+    self.beam._position = Vector2( 0, 0 )
     self.beam.color = beamColor or DEFAULT_BEAM_COLOR
     self.callback = upgradeCallback
     self.zIndex = 1
@@ -43,8 +43,8 @@ function Upgrader:draw()
     love.graphics.setColor( self.beam.color )
     love.graphics.rectangle(
         "fill",
-        self.beam.pos.x,
-        self.beam.pos.y,
+        self.beam._position.x,
+        self.beam._position.y,
         self.beam.size.x,
         self.beam.size.y
     )

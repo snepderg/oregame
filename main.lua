@@ -47,14 +47,17 @@ function love.load()
 end
 
 makeOre = function()
-    local pos = Vector2( 100, 190 + upgrader.size.y / 2 )
-    local size = Vector2( 20, 20 )
     local speed = 50
-    local vel = Vector2( speed, 0 )
-    local color = COLOR_ORANGE
 
-    local value = 5
-    local ore = Ore( pos, size, vel, color, value )
+    local ore = Ore()
+    ore.size = Vector2( 20, 20 )
+    ore.velocity = Vector2( speed, 0 )
+    ore.color = COLOR_ORANGE
+    ore.value = 5
+
+    ore:setPosition( Vector2( 0, 0 ) )
+
+    worldScene:getRoot():addChild( ore )
 
     ore.timeSinceLastUpgrade = os.time() -- FIXME: Band-aid fix for frame debounce
     ore.upgradeDebounceTime = 1
@@ -93,7 +96,7 @@ function love.update( dt )
 
     for i, ore in ipairs( ores ) do
         ore:update( dt )
-        if ore.pos.x > SCREEN_WIDTH then
+        if ore._position.x > SCREEN_WIDTH then
             table.remove( ores, i ) -- FIXME: Garbage collection
             goto nextOre
         end
@@ -139,8 +142,4 @@ end
 
 function love.draw()
     worldScene:frameUpdate()
-
-    for _, ore in ipairs( ores ) do
-        ore:draw()
-    end
 end
