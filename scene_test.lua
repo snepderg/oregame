@@ -14,7 +14,7 @@ local Scene = require( "units.scene" )
 local GameObject = require( "units.game_object" )
 local Camera = require( "units.camera" )
 
-love.graphics.setDefaultFilter( "nearest", "nearest" )
+love.graphics.setDefaultFilter( "nearest", "nearest" ) -- Move to renderer
 
 SCREEN_WIDTH = love.graphics.getWidth()
 
