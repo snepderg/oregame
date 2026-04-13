@@ -52,4 +52,40 @@ function GameObject2D:getModelProjection()
     return self._modelProjection
 end
 
+function GameObject2D:toLocal( globalPosition )
+    local currentObject = self
+    local objectStack = {}
+    while currentObject ~= nil do
+        table.insert( objectStack, currentObject )
+        currentObject = currentObject:getParent()
+    end
+
+    local position = globalPosition
+    for i = #objectStack, 1, -1 do
+        local value = objectStack[i]
+        position.x, position.y = value._modelProjection:inverse():transformPoint( position.x, position.y )
+    end
+    return position
+end
+
+function GameObject2D:toGlobal( localPosition )
+    local currentObject = self
+    local objectStack = {}
+    while currentObject ~= nil do
+        table.insert( objectStack, currentObject )
+        currentObject = currentObject:getParent()
+    end
+
+    local position = localPosition
+    for i = #objectStack, 1, -1 do
+        local value = objectStack[i]
+        position.x, position.y = value._modelProjection:transformPoint( position.x, position.y )
+    end
+    return position
+end
+
+function GameObject2D:getGlobalPosition()
+    return self:toGlobal( self._position )
+end
+
 return GameObject2D
