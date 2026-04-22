@@ -71,6 +71,7 @@ function love.keypressed( key )
     end
 end
 
+--[[
 function love.update( dt )
 
     local speed = 100
@@ -88,8 +89,6 @@ function love.update( dt )
     end
 
     worldScene:tickUpdate()
-
-    tick.update( dt )
 
     if #ores == 0 then return end
 
@@ -139,6 +138,8 @@ function love.update( dt )
     end
 end
 
+
 function love.draw()
     worldScene:frameUpdate()
 end
+]]
