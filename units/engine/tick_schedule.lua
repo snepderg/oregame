@@ -1,14 +1,16 @@
-local Scene = require( "units.scene" )
+local Scene = require( "units.subsystem.scene" )
 
 ActiveScene = Scene()
 
 function love.run()
     if love.load then love.load( love.arg.parseGameArguments(arg), arg ) end
 
+    ActiveScene:load()
+
     if love.timer then
         love.timer.step()
     else
-        -- If timer doesn't exist, we cannot run the game.
+        -- If timer doesn't exist, we should not run the game.
         love.event.quit( 1 )
     end
 
@@ -20,7 +22,7 @@ function love.run()
         if love.event then
             love.event.pump()
             for name, a, b, c, d, e, f in love.event.poll() do
-                if name == "quit" and not love.quit or not love.quit() then
+                if name == "quit" and ( not love.quit or not love.quit() ) then
                     return a or 0
                 end
             end
@@ -29,17 +31,17 @@ function love.run()
         dt = love.timer.step()
 
         -- Call update and draw
-        ActiveScene:tickUpdate( dt )
+        ActiveScene:update( dt )
 
         if love.graphics and love.graphics.isActive() then
             love.graphics.origin()
             love.graphics.clear( love.graphics.getBackgroundColor() )
 
-            ActiveScene:frameUpdate( dt )
+            -- Call upon the renderer subsystem
 
             love.graphics.present()
         end
 
-        if love.timer then love.timer.sleep( 0.001 ) end
+        love.timer.sleep( 0.001 )
     end
 end

@@ -1,124 +1,39 @@
-local Destroyable = require( "classes.destroyable" )
+local Object = require( "units.object" )
+local Transform = require( "units.components.transform" )
 
-local GameObject = Destroyable:subclass( "GameObject" )
+local GameObject = Object:subclass( "GameObject" )
 
 ----- STATIC METHODS -----
 
-function GameObject:initialize()
-    local weak_table = {}
-    weak_table.__mode = "v"
-    self._weak = {}
-    setmetatable( self._weak, weak_table )
+function GameObject:initialize( scene )
+    GameObject.super.initialize( self );
 
-    self._children = {}
-    self._ready = false
-    self._weak._parent = nil
-    self._weak._scene = nil
+    self._scene = scene
+
+    self._components = {}
+
+    self:addComponent( Transform() )
 end
 
 ----- INSTANCE METHODS -----
 
-function GameObject:getParent()
-    return self._weak._parent
-end
-
-function GameObject:getChildren()
-    return self._children
-end
-
-function GameObject:addChild( gameObject )
-    gameObject:_setParent( self )
-    gameObject:_setScene( self:getScene() )
-    table.insert( self._children, gameObject )
-end
-
-function GameObject:removeChild( gameObject )
-    --TODO: Replace with table extension table.removeByValue
-    for i, child in ipairs( self._children ) do
-        if gameObject == child then
-            table.remove( self._children, i )
-            child:_setParent( nil )
-            self._setScene( nil )
-        end
-    end
-end
-
 function GameObject:getScene()
-    return self._weak._scene
+    return self._scene
 end
 
------ OVERRIDABLE METHODS -----
+function GameObject:addComponent( component )
+    component:_setGameObject( self )
+    self._components[component.name] = component
 
--- Called when this GameObject enters a scene tree
-function GameObject:enterScene( newScene )
-    print( self .. "Entered Scene" )
-end
-
--- Called when this GameObject leaves a scene tree
-function GameObject:exitScene( newScene )
-    print( self .. "Exited Scene" )
-end
-
--- Called once all children GameObjects are ready
-function GameObject:ready()
-    print( self .. "GameObject Ready" )
-end
-
--- Called by the scene in depth first order at a fixed interval on all GameObjects
-function GameObject:tickUpdate( deltaTime )
-end
-
--- Called by the scene in depth first order on all GameObjects before drawing the frame
-function GameObject:frameUpdate( deltaTime )
-end
-
--- Called by the scene after all object's frameUpdate has been called.
-function GameObject:draw()
-
-end
-
------ IMPLEMENTED METHODS -----
-
-function GameObject:onDestroyed()
-    local children = self._children
-
-    for i, v in ipairs( children ) do
-        children[i] = nil
-
-        if isValid( v ) then
-            v:destroy()
-        end
+    if self._scene ~= nil then
+        self._scene:_addWeakRefToComponentList( component )
     end
+end
+
+function GameObject:getComponent( name )
+    return self._components[name]
 end
 
 ----- PRIVATE METHODS -----
-
-function GameObject:_setScene( newScene )
-    local children = self:getChildren()
-
-    if self._weak._scene ~= nil then
-        self:exitScene( self._weak._scene )
-        for _, child in ipairs( children ) do
-            child:_setScene( newScene )
-        end
-    end
-
-    self._weak._scene = newScene
-
-    if newScene ~= nil then
-        self:enterScene( newScene )
-        for _, child in ipairs( children ) do
-            child:_setScene( newScene )
-        end
-        if self:getScene():hasStarted() == true and self._ready == false then
-            self._ready = true
-            self:ready()
-        end
-    end
-end
-
-function GameObject:_setParent( newParent )
-    self._weak._parent = newParent
-end
 
 return GameObject

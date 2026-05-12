@@ -1,4 +1,9 @@
-local _ = require( "units.debug" )
+require( "lib.math" )
+
+local _ = require( "units.engine.debug" )
+
 love.graphics.setDefaultFilter( "nearest", "nearest" )
 
-local sceneTest = require( "scene_test" )
+require( "scene_test" )
+
+require( "units.engine.tick_schedule" )

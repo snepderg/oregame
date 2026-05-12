@@ -1,34 +1,11 @@
-local GameObject2D = require( "units.game_object_2d" )
+--[[
+    The Renderer is currently a collection of stateless functions that take a scene as input and renders it to the screen.
+]]
 local Vector2 = require( "units.vector2" )
 
-local Sprite = GameObject2D:subclass( "Sprite" )
+local Renderer = {}
 
------ STATIC METHODS -----
-
-function Sprite:initialize( imagePath )
-    Sprite.super.initialize( self );
-
-    if imagePath ~= nil then
-        self.texture = love.graphics.newImage( imagePath )
-    else
-        self.texture = love.graphics.newCanvas( 1, 1 )
-    end
-
-
-    self.flipH = false
-    self.flipV = false
-
-    self.centered = true
-    self.size = Vector2( self.texture:getWidth(), self.texture:getHeight() )
-    self.offset = Vector2( 0, 0 )
-end
-
------ INSTANCE METHODS -----
-
-
------ IMPLEMENTED METHODS -----
-
-function Sprite:draw()
+function Renderer.draw( scene )
 
     local position = self:getPosition()
     local offset = Vector2(
@@ -52,4 +29,4 @@ function Sprite:draw()
     love.graphics.setPointSize( 1 )
 end
 
-return Sprite
+return Renderer
